@@ -9,6 +9,7 @@ class App extends React.Component {
       departments: [],
       employees: [],
     };
+    this.selectEmployee = this.selectEmployee.bind(this);
     this.increase = this.increase.bind(this);
     this.decrease = this.decrease.bind(this);
     this.destroy = this.destroy.bind(this);
@@ -29,13 +30,30 @@ class App extends React.Component {
     this.setState({ employees });
   }
   async componentDidMount() {
-    this.setState({ departments: (await axios.get('/api/departments')).data });
-    this.setState({ employees: (await axios.get('/api/employees')).data });
+    try {
+      this.setState({
+        departments: (await axios.get('/api/departments')).data,
+      });
+      this.setState({ employees: (await axios.get('/api/employees')).data });
+    } catch (err) {
+      console.log('There was a problem!!!!');
+    }
   }
+
+  async selectEmployee(employeeId) {
+    try {
+      const res = await axios.get(`/api/employees/${employeeId}`);
+      const selectedEmployee = res.data;
+      this.setState({ selectedEmployee });
+    } catch (err) {
+      console.log('There was a problem!');
+    }
+  }
+
   async increase(employee) {
     employee = (
       await axios.put(`/api/employees/${employee.id}`, {
-        total: ++employee.total,
+        total: employee.total++,
       })
     ).data;
     const employees = this.state.employees.map((e) =>
@@ -47,7 +65,7 @@ class App extends React.Component {
   async decrease(employee) {
     employee = (
       await axios.put(`/api/employees/${employee.id}`, {
-        total: --employee.total,
+        total: employee.total--,
       })
     ).data;
     const employees = this.state.employees.map((e) =>
@@ -68,40 +86,40 @@ class App extends React.Component {
       <div>
         <h1>Acme Employees and Departments</h1>
         <h3>({employees.total}) Total Employees</h3>
-        <form onSubmit={create}>
-          <button>Add Department</button>
-        </form>
-        <div className="no_Dept">
-          Employee Without Department ({employees.total})
-          <div>
-            {departments.map((department) => {
-              return (
-                <span key={department.id}>
-                  <h2>
-                    {department.name} ({employees.total})
-                  </h2>
-                  <div>
-                    {employees.map((employee) => {
-                      return (
-                        <ul id="employee_list">
-                          <li key={employee.id}>
-                            <h3>{employees.name}</h3>
-                            <button onClick={() => destroy(employee)}>x</button>
-                            <button onClick={() => decrease(employee)}>
-                              Remove From Department
-                            </button>
-                            <button onClick={() => increase(employee)}>
-                              Add To Employee Without Department
-                            </button>
-                          </li>
-                        </ul>
-                      );
-                    })}
-                  </div>
-                </span>
-              );
-            })}
+        <span class="dept_info">
+          <div class="no_Dept">
+            <h2>Employee Without Department ({employees.total})</h2>
+            <button onClick={() => destroy(employee)}>x</button>
           </div>
+        </span>
+        <div>
+          {departments.map((department) => {
+            return (
+              <span key={department.id}>
+                <h2>
+                  {department.name} ({employees.total})
+                </h2>
+                <div>
+                  {employees.map((employee) => {
+                    return (
+                      <ul id="employee_list">
+                        <li key={employee.id}>
+                          <h3>{employees.name}</h3>
+                          <button onClick={() => destroy(employee)}>x</button>
+                          <button onClick={() => decrease(employee.total)}>
+                            Remove From Department
+                          </button>
+                          {/* <button onClick={() => increase(employee.total)}>
+                                Add To Employee Without Department
+                              </button> */}
+                        </li>
+                      </ul>
+                    );
+                  })}
+                </div>
+              </span>
+            );
+          })}
         </div>
       </div>
     );

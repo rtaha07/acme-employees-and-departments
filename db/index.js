@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const chalk = require('chalk');
-const { STRING, INTEGER, BOOLEAN, UUID, UUIDV1 } = Sequelize;
+const { STRING, INTEGER, BOOLEAN, UUID, UUIDV4 } = Sequelize;
 const conn = new Sequelize(
   process.env.DATABASE_URL || 'postgres://localhost/acme_company'
 );
@@ -11,34 +11,23 @@ const Department = conn.define('department', {
     type: UUID,
     primaryKey: true,
     allowNull: false,
-    defaultValue: UUIDV1,
+    defaultValue: UUIDV4,
   },
   name: {
     type: STRING,
     allowNull: false,
-    // validate: {
-    //   notEmpty: true,
-    // },
   },
 });
 
 const Employee = conn.define('employee', {
-  id: {
-    type: UUID,
-    primaryKey: true,
-    allowNull: false,
-    defaultValue: UUIDV1,
-  },
   name: {
     type: STRING,
     allowNull: false,
-    // validate: {
-    //   notEmpty: true,
-    // },
   },
   total: {
     type: INTEGER,
     allowNull: true,
+    defaultValue: 0,
   },
 });
 
@@ -64,19 +53,13 @@ const syncAndSeed = async () => {
   const depPromises = [];
   const empPromises = [];
   while (depPromises.length < 5) {
-    //|| empPromises.length < 50) {
     depPromises.push(
       Department.create({
         name: faker.commerce.department(),
       })
     );
-    // empPromises.push(
-    //   Employee.create({
-    //     name: faker.name.findName(),
-    //   })
-    // );
   }
-  while (empPromises.length < 50) {
+  while (empPromises.length < 10) {
     empPromises.push(
       Employee.create({
         name: faker.name.findName(),

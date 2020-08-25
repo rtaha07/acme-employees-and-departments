@@ -5,8 +5,65 @@
 body {
   margin: 50px;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  float: center;
   background-color: #9fb8df;
 }
-.css-selector {
-  font-family: 'Crimson Pro', serif;
+
+h1,
+h2,
+h3 {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  margin: 20px;
+  padding: 10px;
+}
+
+span {
+  list-style: none;
+  width: 25%;
+  height: 100%;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: inline-table;
+  margin: 0;
+  border: 1px solid #000;
+  box-shadow: 0 2px 2px #ccc;
+  padding: 20;
+}
+span:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.dept_info {
+  display: inline-block;
+  width: 50%;
+  height: 100%;
+  margin: 20;
+  padding: 0;
+  /* background-color: rgb(191, 196, 183); */
+}
+
+#employee_list > li {
+  display: block;
+  width: 200px;
+  color: black;
+  float: center;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  /* background-color: rgb(175, 126, 126); */
+}
+
+button {
+  background-color: #bbc2bb;
+  border: 1px solid rgb(63, 66, 63);
+  margin: 10;
+  float: center;
+  color: black;
+  padding: 16px 18px;
+  cursor: pointer;
+  width: 100%;
+  display: block;
 }
